@@ -1,0 +1,25 @@
+{
+  "name": "utils",
+  "version": "1.0.0",
+  "description": "All kinds of stuff for different use cases",
+  "license": "MIT-0",
+  "author": "Lauri Methuen",
+  "dependencies": {
+    "@tanstack/react-query": "^5.90.2",
+    "clsx": "^2.1.1",
+    "framer-motion": "^12.23.22",
+    "howler": "^2.2.4",
+    "next": "^15.5.4",
+    "react": "^19.1.1",
+    "react-use": "^17.6.0",
+    "usehooks-ts": "^3.1.1",
+    "zustand": "^5.0.8"
+  },
+  "devDependencies": {
+    "@types/howler": "^2.2.12",
+    "@types/node": "^24.6.0",
+    "@types/react": "^19.1.15",
+    "type-fest": "^5.0.1",
+    "typescript": "^5.9.2"
+  }
+}
