@@ -2,14 +2,14 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import ZustandUtils from "@/ts/zustand/ZustandUtils";
 
-export type Foo = {
-  foo: boolean;
+type Foo = {
   bar: boolean;
+  baz: boolean;
 };
 
 const initialState: Foo = {
-  foo: false,
   bar: false,
+  baz: false,
 };
 
 const fooActions = ZustandUtils.createActions<Foo>()((set) => ({

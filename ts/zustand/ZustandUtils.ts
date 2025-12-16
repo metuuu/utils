@@ -18,18 +18,18 @@ const createActions =
   ) =>
     actionsCreator;
 
-// Selectors
+// Selectors - https://zustand.docs.pmnd.rs/guides/auto-generating-selectors ("use" renamed to "select")
 type WithSelectors<S> = S extends { getState: () => infer T }
-  ? S & { use: { [K in keyof T]: () => T[K] } }
+  ? S & { select: { [K in keyof T]: () => T[K] } }
   : never;
 
 const createSelectors = <S extends UseBoundStore<StoreApi<object>>>(
   _store: S
 ) => {
   const store = _store as WithSelectors<typeof _store>;
-  store.use = {};
+  store.select = {};
   for (const k of Object.keys(store.getState())) {
-    (store.use as any)[k] = () => store((s) => s[k as keyof typeof s]);
+    (store.select as any)[k] = () => store((s) => s[k as keyof typeof s]);
   }
 
   // return store as WithoutObjectKeys<typeof store>;
