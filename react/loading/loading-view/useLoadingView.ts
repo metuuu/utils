@@ -1,4 +1,9 @@
-import React from "react";
+import {
+  FetchStatus,
+  MutationStatus,
+  QueryStatus,
+} from "@tanstack/react-query";
+import React, { useCallback } from "react";
 import { SetRequired } from "type-fest";
 // import { errorToMessage } from "../utils/error-utils";
 
@@ -21,8 +26,9 @@ export const initializeLoadingViewUI = (options: {
   renderDefaultErrorComponent = options.renderDefaultErrorComponent;
 };
 
-export type LoadingTask = {
-  isIdle?: boolean;
+export type LoadingViewTask = {
+  status?: MutationStatus | QueryStatus;
+  fetchStatus?: FetchStatus;
   isLoading?: boolean;
   isPending?: boolean;
   error?: unknown;
@@ -30,16 +36,19 @@ export type LoadingTask = {
   refetch?: () => void;
 };
 
-type ErrorTask = SetRequired<Pick<LoadingTask, "error" | "refetch">, "error">;
+type ErrorTask = SetRequired<
+  Pick<LoadingViewTask, "error" | "refetch">,
+  "error"
+>;
 
 type LoadingProps = {
   /** Array of loading tasks, false values are ignored */
-  tasks: (LoadingTask | false)[];
+  tasks: (LoadingViewTask | false)[];
   /**
    * Whether to show loading state when tasks are idle
    * @default true
    */
-  isLoadingWhileIdle?: boolean;
+  isIdleTaskTreatedAsLoading?: boolean;
   /** Class name for the loading view */
   className?: string;
   /** Text to display during loading */
@@ -117,7 +126,7 @@ const useLoadingView = (
   const {
     tasks: tasks,
     loadingText,
-    isLoadingWhileIdle = true,
+    isIdleTaskTreatedAsLoading = true,
     className,
     center = !className,
     ignoreErrors,
@@ -128,8 +137,19 @@ const useLoadingView = (
     renderLoading,
     // ...restProps
   } = options;
-  const isTaskLoading = !!tasks.find((r) => r && (r.isLoading || r.isPending));
-  const isTaskIdle = tasks.find((r) => r && r.isIdle === true);
+  const getIsTaskIdle = useCallback(
+    (task?: LoadingViewTask) =>
+      task &&
+      (task.status === "idle" ||
+        (task.fetchStatus === "idle" && task.status === "pending")),
+    []
+  );
+  const isTaskLoading = !!tasks.find(
+    (t) =>
+      t &&
+      (t.isLoading || t.status === "pending") &&
+      (isIdleTaskTreatedAsLoading || !getIsTaskIdle(t))
+  );
 
   // Errors
   let errorTasks: ErrorTask[] = [];
@@ -187,7 +207,7 @@ const useLoadingView = (
   }
 
   // Loading
-  if (isTaskLoading || (isTaskIdle && isLoadingWhileIdle)) {
+  if (isTaskLoading) {
     const loadingComponent = renderLoading
       ? renderLoading()
       : renderDefaultLoadingComponent({ center, className, loadingText });
