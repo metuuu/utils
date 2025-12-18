@@ -1,8 +1,12 @@
 import ZustandUtils from "./ZustandUtils";
+import { useFooStoreGymnasticsSetup } from "./foo-store-gymnastics-setup";
 import { useFooStore } from "./foo-store";
 
 const stores = {
-  useFoo: ZustandUtils.createSelectors(useFooStore),
+  useFooStore: ZustandUtils.createSelectors(useFooStore),
+  useFooStoreGymnasticsSetup: ZustandUtils.createSelectors(
+    useFooStoreGymnasticsSetup
+  ),
 };
 
 const zustand = {

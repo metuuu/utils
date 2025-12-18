@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { StoreApi, UseBoundStore } from "zustand";
 
-// Creating actions
+// Creating actions (you probably don't want to use this "createActions")
 export type ZustandActionSetter<TState> = (
   partial: Partial<TState> | ((state: TState) => Partial<TState>),
   replace?: false

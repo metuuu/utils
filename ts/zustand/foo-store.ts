@@ -1,33 +1,35 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import ZustandUtils from "@/ts/zustand/ZustandUtils";
 
 type Foo = {
   bar: boolean;
   baz: boolean;
 };
+type FooActions = {
+  updateFoo: (options: Partial<Foo>) => void;
+  reset: () => void;
+};
+export type FooStore = Foo & FooActions;
 
 const initialState: Foo = {
   bar: false,
   baz: false,
 };
 
-const fooActions = ZustandUtils.createActions<Foo>()((set) => ({
-  updateFoo: (options: Partial<Foo>) =>
-    set((state) => ({ ...state, ...options })),
-}));
-
-export type FooStore = Foo & ReturnType<typeof fooActions>;
-
 export const useFooStore = create<FooStore>()(
   persist(
-    (set, get, store) => ({
+    (set) => ({
       ...initialState,
-      ...fooActions(set, get, store),
+      updateFoo: (foo) => {
+        set((state) => ({ ...state, ...foo }));
+      },
+      reset: () => {
+        set((state) => ({ ...state, ...initialState }));
+      },
     }),
     {
       name: "foo", // unique name for localStorage key
-      partialize: (state) => state,
+      // partialize: (state) => ({ bar: state.bar }), // Saving only part of the state to localStorage
     }
   )
 );
