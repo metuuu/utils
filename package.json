@@ -16,6 +16,7 @@
     "framer-motion": "^12.23.22",
     "howler": "^2.2.4",
     "http-status": "^2.1.0",
+    "http-status-codes": "^2.3.0",
     "lambda-log": "^3.1.0",
     "next": "^15.5.4",
     "react": "^19.1.1",
